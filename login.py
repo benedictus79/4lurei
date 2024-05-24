@@ -97,14 +97,14 @@ def get_courses(data_schools):
     choice = int(input("Digite o número do curso que deseja visualizar ou 0 para todos: "))
     if choice == 0:
       print("Todos os cursos selecionados.")
-      selected_course[data_school_info['path']] = courses
+      selected_course[data_school_title] = courses
       return selected_course
     elif 1 <= choice <= len(courses):
       selected_course_name = course_names[choice - 1]
-      selected_course = {selected_course_name: courses[selected_course_name]}
+      selected_course[data_school_title] = {selected_course_name: courses[selected_course_name]}
       data_schools[data_school_title][data_school_info['path']] = selected_course
       print(f"Você selecionou: {selected_course_name}")
-      return data_schools
+      return selected_course
  
 
 email, password = credentials()

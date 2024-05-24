@@ -5,11 +5,11 @@ from login import alurasession, BeautifulSoup, courses, data_schools
 from utils import re, clear_folder_name, os, create_folder
 
 
-def get_modules(path, courses):
+def get_modules(path, courses_data):
   data_sections = {}
-  for n, (course_title, course_data) in enumerate(courses.items(), start=1):
-    course_title = f'{n:03d} - {course_title}' 
-    path_module = create_folder(os.path.join(path, clear_folder_name(course_title)))
+  for n, (course_title, course_data) in enumerate(courses_data.items(), start=1):
+    course_title = f'{n:03d} - {clear_folder_name(course_title)}' 
+    path_module = create_folder(os.path.join(path, course_title))
     response = alurasession.get(course_data)
     soup = BeautifulSoup(response.text, 'html.parser')
     sections = soup.find_all('a', class_='courseSectionList-section')
@@ -19,7 +19,7 @@ def get_modules(path, courses):
 
 def get_section_href(sections):
   for section in sections:
-    print(f'https://cursos.alura.com.br{section['href']}')
+    print(f'https://cursos.alura.com.br{section["href"]}')
 
 
 def decompose_object_tags(section, n):

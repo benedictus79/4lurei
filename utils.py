@@ -17,7 +17,7 @@ def alexandria_ascii_art():
   Script: {name}
   Version: {version}
   """
-  print(alexandria.format(name='4lurei', version='Alpha 0.1'))
+  print(alexandria.format(name='4lurei', version='Alpha 0.3'))
 
 
 def clear_screen():
@@ -42,9 +42,9 @@ def clear_folder_name(name, is_file=None, ext=''):
 
 def logger(message, error=None, warning=None):
   if error:
-    log_to_file('hotm4rtei_erros.txt', message)
+    log_to_file('4lurei_erros.txt', message)
   if warning:
-    log_to_file('hotm4rtei_avisos.txt', message)
+    log_to_file('4lurei_avisos.txt', message)
 
 
 def log_to_file(filename, message):
@@ -54,14 +54,15 @@ def log_to_file(filename, message):
 
 
 class SilentLogger(object):
+  def __init__(self, url=None, output_path=None):
+    self.url = url
+    self.output_path = output_path
+
   def debug(self, msg):
     pass
 
   def warning(self, msg):
-    if 'If this is a livestream,' in str(msg):return
-    logger(msg, warning=True)
+    logger(f"WARNING: {msg} - URL: {self.url}, Path: {self.output_path}")
 
   def error(self, msg):
-    if 'HTTP Error 403' in str(msg):return
-    if 'No such file or directory' in str(msg):return
-    logger(msg, error=True)
+    logger(f"ERROR: {msg} - URL: {self.url}, Path: {self.output_path}")

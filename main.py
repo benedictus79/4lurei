@@ -1,7 +1,7 @@
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor
-from download import download_with_ytdlp, ytdlp_options
-from login import alurasession, BeautifulSoup, courses, data_schools
+from download import download_with_ytdlp
+from login import alurasession, BeautifulSoup, courses
 from utils import re, clear_folder_name, os, create_folder
 
 
@@ -40,8 +40,8 @@ def get_videos(soup, path, lesson_link):
     response = alurasession.get(f'{lesson_link}/video').json()
     for n, video in enumerate(response, start=1):
       if video['quality'] == 'hd':
-        ydl_opts = ytdlp_options(os.path.join(path, f'{n:03d} - aula'), alurasession)
-        download_with_ytdlp(ydl_opts, video['mp4'])
+        output_folder = os.path.join(path, f'{n:03d} - aula')
+        download_with_ytdlp(output_folder, video['mp4'], alurasession)
 
 
 def get_content(soup, path):

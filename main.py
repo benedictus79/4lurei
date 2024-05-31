@@ -40,19 +40,24 @@ def get_videos(soup, path, lesson_link):
     response = alurasession.get(f'{lesson_link}/video').json()
     for n, video in enumerate(response, start=1):
       if video['quality'] == 'hd':
-        output_folder = os.path.join(path, f'{n:03d} - aula')
+        output_folder = os.path.join(path, 'aula')
         download_with_ytdlp(output_folder, video['mp4'], alurasession)
 
 
 def get_content(soup, path):
-  contents = soup.find_all('div', class_='formattedText', attrs={'data-external-links': ''})
+  contents = soup.find_all('div', class_='formattedText', attrs={'data-external-links': ''})[0]
+  questions = soup.find('ul', class_='alternativeList')
+  suffix = 'questionario.html' if questions else 'texto.html'
   if contents:
-    for n, content in enumerate(contents, start=1):
-      folder_path = create_folder(os.path.join(path, 'descricao'))
-      folder_path = os.path.join(folder_path, f'{n:03d} - aula.html')
-      if not os.path.exists(folder_path):
-        with open(folder_path, 'w', encoding='utf-8') as file:
-          file.write(content.prettify())
+    file_path = os.path.join(path, suffix)
+    if not os.path.exists(file_path):
+      with open(file_path, 'w', encoding='utf-8') as file:
+        file.write(contents.prettify())
+        if questions:
+          buttons = questions.find_all('button', class_='alternativeList-item-opinionButton')
+          for button_tag in buttons:
+            button_tag.decompose()
+          file.write(questions.prettify()) 
 
 
 def process_single_lesson(lesson_path, lesson_link):

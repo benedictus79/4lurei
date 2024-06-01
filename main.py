@@ -38,21 +38,23 @@ def print_section_details(div, section, n):
 def get_videos(soup, path, lesson_link):
   if soup.find('section', class_='video-container', id='video'):
     response = alurasession.get(f'{lesson_link}/video').json()
-    for n, video in enumerate(response, start=1):
+    for video in response:
       if video['quality'] == 'hd':
         output_folder = os.path.join(path, 'aula')
-        download_with_ytdlp(output_folder, video['mp4'], alurasession)
+        if not os.path.exists(f'{output_folder}.mp4'):
+          download_with_ytdlp(output_folder, video['mp4'], alurasession)
 
 
 def get_content(soup, path):
-  contents = soup.find_all('div', class_='formattedText', attrs={'data-external-links': ''})[0]
+  contents = soup.find_all('div', class_='formattedText', attrs={'data-external-links': ''})
   questions = soup.find('ul', class_='alternativeList')
   suffix = 'questionario.html' if questions else 'texto.html'
   if contents:
+    content = contents[0]
     file_path = os.path.join(path, suffix)
     if not os.path.exists(file_path):
       with open(file_path, 'w', encoding='utf-8') as file:
-        file.write(contents.prettify())
+        file.write(content.prettify())
         if questions:
           buttons = questions.find_all('button', class_='alternativeList-item-opinionButton')
           for button_tag in buttons:

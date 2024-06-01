@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from utils import os, alexandria_ascii_art, clear_screen, create_folder
+from utils import clear_folder_name, os, alexandria_ascii_art, clear_screen, create_folder
 
 alurasession = requests.Session()
 
@@ -94,7 +94,7 @@ def get_courses(data_schools):
     courses = pagination(soup, data_school_title, pages_total)
     course_names = list(courses.keys())
     for n, course_name in enumerate(course_names, start=1):
-      print(f'{n}. {course_name}')
+      print(f'{n}. {str(course_name)}')
     choice = int(input("Digite o número do curso que deseja visualizar ou 0 para todos: "))
     if choice == 0:
       print("Todos os cursos selecionados.")

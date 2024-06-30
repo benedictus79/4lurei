@@ -7,14 +7,14 @@ from utils import re, clear_folder_name, os, create_folder
 
 def get_modules(path, courses_data):
   data_sections = {}
-  for n, (course_title, course_data) in enumerate(courses_data.items(), start=1):
+  for n, (course_title, course_data) in enumerate(tqdm(courses_data.items(), desc='Processing Courses', total=len(courses_data.items())), start=1):
     course_title = f'{n:03d} - {clear_folder_name(course_title)}' 
     path_module = create_folder(os.path.join(path, course_title))
     response = alurasession.get(course_data)
     soup = BeautifulSoup(response.text, 'html.parser')
     sections = soup.find_all('a', class_='courseSectionList-section')
     data_sections[path_module] = sections
-  return data_sections
+    data_modules(data_sections)
 
 
 def get_section_href(sections):
@@ -41,8 +41,10 @@ def get_videos(soup, path, lesson_link):
     for video in response:
       if video['quality'] == 'hd':
         output_folder = os.path.join(path, 'aula')
-        if not os.path.exists(f'{output_folder}.mp4'):
-          download_with_ytdlp(output_folder, video['mp4'], alurasession)
+        download_with_ytdlp(output_folder, video['mp4'], alurasession)
+      elif video['quality'] == 'sd':
+        output_folder = os.path.join(path, 'aula')
+        download_with_ytdlp(output_folder, video['mp4'], alurasession)
 
 
 def get_content(soup, path):
@@ -100,7 +102,7 @@ def process_modules(title, link, path):
   return videos
 
 
-def data_modules(sections, progress_bar):
+def data_modules(sections):
   data = {}
   for path, sections_data in sections.items():
     for n, section in enumerate(sections_data, start=1):
@@ -108,14 +110,11 @@ def data_modules(sections, progress_bar):
       data[title] = {'link': link, 'path': path}
       modules = process_modules(title, link, path)
       data = data_lessons(modules)
-      lessons = process_lessons(data)
-    progress_bar.update(1)
+      process_lessons(data)
 
 
 if __name__ == '__main__':
   total_courses = sum(len(course_info) for _, course_info in courses.items())
-  progress_bar = tqdm(total=total_courses, desc="Processing courses")
-  for n, (path, course_info) in enumerate(courses.items(), start=1):
+  for path, course_info in courses.items():
     path_school = create_folder(os.path.join(os.getcwd(), path))
     sections = get_modules(path_school, course_info)
-    data_modules(sections, progress_bar)

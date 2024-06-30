@@ -17,7 +17,7 @@ def alexandria_ascii_art():
   Script: {name}
   Version: {version}
   """
-  print(alexandria.format(name='4lurei', version='Alpha 0.4'))
+  print(alexandria.format(name='4lurei', version='Alpha 0.5'))
 
 
 def clear_screen():
@@ -33,11 +33,11 @@ def create_folder(folder_name):
   return path
 
 
-def clear_folder_name(name, is_file=None, ext=''):
-  if is_file:
-    name, ext = os.path.splitext(name)
-  sanitized_base = re.sub(r'[<>:."/\\|?*]|\s+|\.$', ' ', name).strip()
-  return sanitized_base + ext if ext else sanitized_base
+def clear_folder_name(name):
+  sanitized_name = re.sub(r'[<>:"/\\|?*]', ' ', name)
+  sanitized_name = re.sub(r'\s+', ' ', sanitized_name)
+  sanitized_name = re.sub(r'\.+$', '', sanitized_name)
+  return sanitized_name.strip()
 
 
 def logger(message, error=None, warning=None):

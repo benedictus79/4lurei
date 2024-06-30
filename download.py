@@ -4,18 +4,21 @@ from utils import os, SilentLogger, logger
 
 def download_with_ytdlp(output_folder, media, session=None):
   ydl_opts = {
-    'format': 'bv[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/best',
+    'logger': SilentLogger(media, f'{output_folder}.%(ext)s'),
+    'merge_output_format': 'mp4',
+    'format': 'bestvideo+bestaudio/best',
     'outtmpl': f'{output_folder}.%(ext)s',
     'quiet': True,
-    'no_progress': True,
     'continuedl': True,
-    'logger': SilentLogger(media, f'{output_folder}.%(ext)s'),
-    'concurrent_fragment_downloads': 10,
-    'fragment_retries': 50,
-    'file_access_retries': 50,
+    'no_progress': True,
+    'no_overwrites': True,
+    'windows_filenames': True,
     'retries': 50,
-    'extractor_retries': 50,
     'trim_file_name': 249,
+    'fragment_retries': 50,
+    'extractor_retries': 50,
+    'file_access_retries': 50,
+    'concurrent_fragment_downloads': 10,
   }
   if session:
     ydl_opts['http_headers'] = session.headers

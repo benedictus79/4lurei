@@ -12,12 +12,12 @@ def alexandria_ascii_art():
 |__   _| |__| |_| |  _ <| |___ | | 
    |_| |_____\___/|_| \_\_____|___|
 
-  Author: Bendictus | Xanarcry ;( | doiscafe | sukuna | Jão
-  Community: https://t.me/+7imfib1o0CQwNmUx5
+  Author: Alex4ndria Team
+  Community: https://t.me/+DoZ_EeKWN0NhY2Ix
   Script: {name}
   Version: {version}
   """
-  print(alexandria.format(name='4lurei', version='Alpha 0.5'))
+  print(alexandria.format(name='4lurei', version='Alpha 0.6'))
 
 
 def clear_screen():

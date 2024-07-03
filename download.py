@@ -22,6 +22,7 @@ def download_with_ytdlp(output_folder, media, session=None):
   }
   if session:
     ydl_opts['http_headers'] = session.headers
+    ydl_opts['http_headers'] = session.headers.update({'Upgrade-Insecure-Requests': '1'})
   while True:
     try:
       with yt_dlp.YoutubeDL(ydl_opts) as ydl:
